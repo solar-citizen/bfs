@@ -1,12 +1,13 @@
 import { generateMatrix } from './generateMatrix.js';
 
-// main function
+// Main function
 const bfs = (matrix) => {
   let startingRow;
   let startingCol;
   let endingRow;
   let endingCol;
 
+  // Get starting and ending cells
   const getRandomCells = () => {
     startingRow = Math.floor(Math.random() * matrix.length);
     startingCol = Math.floor(Math.random() * matrix[startingRow].length);
@@ -15,10 +16,10 @@ const bfs = (matrix) => {
     endingCol = Math.floor(Math.random() * matrix[endingRow].length);
 
     if (
-      // if value in some cell === 1
+      // If value in some cell === 1
       matrix[startingRow][startingCol] !== 0 ||
       matrix[endingRow][endingCol] !== 0 ||
-      // if randomed same cell
+      // If randomed same cell
       (matrix[startingRow] === matrix[endingRow] &&
         matrix[startingCol] === matrix[endingCol])
     ) {
@@ -32,7 +33,8 @@ const bfs = (matrix) => {
   const queue = [[[startingRow, startingCol], distance]];
   const destination = [endingRow, endingCol];
   const visited = new Map();
-  visited.set([startingRow, startingCol].toString(), null); // Mark initial points as visited
+  // Mark initial cells as visited
+  visited.set([startingRow, startingCol].toString(), null);
 
   const getNextSteps = ([startingRow, startingCol]) => {
     const directions = [
@@ -46,9 +48,9 @@ const bfs = (matrix) => {
       [0, -1],
     ];
     const nextSteps = [];
-    for (const [nx, ny] of directions) {
-      if (matrix[startingRow + nx]?.[startingCol + ny] === 0)
-        nextSteps.push([startingRow + nx, startingCol + ny]);
+    for (const [nX, nY] of directions) {
+      if (matrix[startingRow + nX]?.[startingCol + nY] === 0)
+        nextSteps.push([startingRow + nX, startingCol + nY]);
     }
     return nextSteps;
   };
@@ -65,7 +67,7 @@ const bfs = (matrix) => {
       current[1] === destination[1] &&
       matrix[destination[0]][destination[1]] === 0
     ) {
-      // Derive the path from the linked list we now have in the visited structure:
+      // Get path from the linked list in the visited structure
       const path = [];
       while (current) {
         path.push(current);
@@ -74,13 +76,14 @@ const bfs = (matrix) => {
       logPoints();
 
       // RESULT - if reachable
-      return path.reverse(); // Reverse to get from source to destination
+      // Reverse to get from source to destination
+      return path.reverse();
     }
 
     for (let neighbor of getNextSteps(current)) {
       // Visited-check moved here:
       if (visited.has(neighbor.toString())) continue;
-      // Mark with the coordinates of the previous node on the path:
+      // Mark with the coordinates of the previous cell on the path
       visited.set(neighbor.toString(), current);
       queue.push([neighbor, distance++]);
     }
